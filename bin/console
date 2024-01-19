@@ -1,0 +1,77 @@
+#!/usr/bin/env php
+<?php
+
+if($argv[1]==="serve")
+{
+    shell_exec("php -S localhost:8080 -t public");
+}
+
+if($argv[1]==="make:entity")
+{
+    print_r("\n");
+    $entityName = readline("Entity Name ? \n");
+
+
+    print_r("\n");
+
+    $tableName = readline("SQL Table Name ? \n");
+
+
+    print_r("\n");
+    makeEntityFile($entityName,$tableName);
+    print_r("\n");
+    print_r("Your Entity was created as src/Entity/${entityName}.php");
+    print_r("\n");
+
+    print_r("\n");
+
+}
+
+if($argv[1]==="make:controller")
+{
+    print_r("\n");
+    $controllerName = readline("Controller Name ?");
+    $controllerFinalName = ucfirst($controllerName)."Controller.php";
+
+
+    touch("src/Controller/${controllerFinalName}");
+    mkdir("templates/".$controllerName);
+    touch("templates/$controllerName/index.html.php");
+    print_r("\n");
+    print_r("Your controller was created as src/Controller/$controllerFinalName");
+    print_r("\n");
+
+    print_r("A new template created as templates/${controllerName}/index.html.php");
+    print_r("\n");
+
+}
+
+
+function makeEntityFile($entityName, $tableName)
+{
+    $entityName = ucfirst($entityName);
+
+    touch("src/Entity/${entityName}.php");
+
+    $content =
+        "<?php
+\n
+\n
+#[Table(name:${$tableName})]
+\n
+#[\Core\Attributes\TargetRepository(name:${entityName}.'Repository')]
+\n
+class ${entityName}
+\n
+{
+\n
+//you can now declare fields according to the table, plus getters and setters
+}
+";
+
+    $file = fopen("src/Entity/${$entityName}.php", "w");
+    fwrite($file,$content);
+    fclose($file);
+
+
+}

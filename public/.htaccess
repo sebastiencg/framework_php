@@ -1,0 +1,6 @@
+RewriteEngine On
+RewriteBase /public/  # Remplacez par le chemin relatif de votre dossier public
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ index.php [QSA,L]

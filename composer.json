@@ -1,0 +1,22 @@
+{
+    "name": "esdlyonb2/framework-php",
+    "description": "a simple php framework",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/",
+            "Core\\": "core/"
+        }
+    },
+    "authors": [
+        {
+            "name": "ESD Lyon Dev Web b2",
+            "email": "pierre.lacognata@mail-esd.com"
+        }
+    ],
+    "prefer-stable": true,
+    "require": {
+        "php": ">=8.1"
+    }
+    }
