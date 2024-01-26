@@ -4,7 +4,7 @@ namespace Core\View;
 
 class View
 {
-   public static function render($nomDeTemplate, $donnees){
+    public static function render($nomDeTemplate, $donnees){
 
         ob_start();
         extract($donnees);
@@ -19,5 +19,11 @@ class View
         require_once "../templates/base.html.php";
         echo ob_get_clean();
 
+    }
+
+    public static function renderError($nomDeTemplate){
+        ob_start();
+        require_once "../templates/error/$nomDeTemplate.html.php";
+        echo ob_get_clean();
     }
 }

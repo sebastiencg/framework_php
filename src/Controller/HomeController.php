@@ -8,8 +8,7 @@ use Core\Http\Response;
 
 class HomeController extends Controller
 {
-    #[Route(uri: "/", name: "app_home_index", methods: ["get"])]
-    //ajouter les methods : Post, GET, Delete, Put
+    #[Route(uri: "/", name: "app_home_index", methods: ["GET"])]
     public function index():Response
     {
         return $this->render("home/index", [
@@ -17,9 +16,10 @@ class HomeController extends Controller
         ]);
     }
 
-    #[Route(uri: "/home/show", name: "app_home_show", methods: ["GET", "POST"])]
-    public function show():Response
+    #[Route(uri: "/home/show/{id}", name: "app_home_show", methods: ["GET", "POST"])]
+    public function show(int $id):Response
     {
+        //echo($id);
         return $this->render("home/index", [
             "pageTitle"=> "Welcome to /home/show"
         ]);

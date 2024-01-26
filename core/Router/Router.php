@@ -16,7 +16,6 @@ class Router
      */
     public function __construct()
     {
-        ///$this->routes = $this->getRoutes([\App\Controller\HomeController::class,]);
         $controllerDirectory = __DIR__ . '/../../src/Controller';
 
         $controllerFiles = scandir($controllerDirectory);
@@ -31,10 +30,8 @@ class Router
         $this->routes = $this->getRoutes($controllerClasses);
     }
 
-
     public function getRoutes(array $controllers)
     {
-
         foreach ($controllers as $controller) {
             $reflectionController = new \ReflectionClass($controller);
             $methodsInController = $reflectionController->getMethods();
@@ -54,10 +51,7 @@ class Router
 
                 $attributes = $method->getAttributes(\Core\Attributes\Route::class);
 
-
                 foreach ($attributes as $attribute) {
-
-
                     $argument = $attribute->getArguments();
                     $route = new Route();
                     $route->setUri($argument['uri']);
@@ -65,26 +59,19 @@ class Router
                     $route->setMethods(array_map('strtoupper', $argument['methods']));
                     $route->setController($controller);
                     $route->setMethod($method->getName());
-                    //$this->routes[] = $route; // faire le addRoute() à la place
+
                     $this->addRoute($route);
                 }
-                //$this->routes = $route;
             }
-
         }
         return $this->routes;
     }
 
-    public function addRoute($route){
+    public function addRoute($route)
+    {
         $this->routes[] = $route;
         //$this->routes[$route['route']] = $route['c&m'];
     }
-
-
-
-
-
-
 
     public function getControllerAndMethod(Request $request)
     {
@@ -97,10 +84,21 @@ class Router
     private function getControllerAndMethodFromUri(string $uri)
     {
         foreach ($this->routes as $route) {
-            if ($route->getUri() === $uri) {
+            $pattern = $this->buildRoutePattern($route->getUri());
+
+            if (preg_match($pattern, $uri, $matches)) {
+                $route->setUriData(array_slice($matches, 1));
 
                 return $route;
             }
         }
+        return null;
+    }
+
+    private function buildRoutePattern(string $uri): string
+    {
+        $pattern = preg_replace('/{(\w+)}/', '(\w+)', $uri);
+
+        return '/^' . str_replace('/', '\/', $pattern) . '$/';
     }
 }

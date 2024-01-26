@@ -31,7 +31,7 @@
                     <a class="nav-link active" href="/">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="/home/show">Show</a>
+                    <a class="nav-link active" href="/home/show/1">Show</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active" href="/user/make">Create user</a>
