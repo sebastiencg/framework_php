@@ -105,23 +105,23 @@ class Debugger
 
     public function prodErrorHandler($c,$m,$f,$l)
     {
+
         $this->error = [$c,$m,$f,$l];
 
         //ajouter au log prod
+        error_log($m, 3, "../logs/prod/prod.log");
 
         $resp = new Response();
         $resp->renderError("500", []);
-
     }
     public function prodExceptionHandler(\Throwable $e)
     {
-
         $this->exception =$e;
 
         //ajouter au log prod
+        error_log($e, 3, "../logs/prod/prod.log");
 
         $resp = new Response();
         $resp->renderError("500", []);
-
     }
 }
