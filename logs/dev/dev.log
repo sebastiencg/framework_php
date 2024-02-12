@@ -1,0 +1,42 @@
+ERROR
+2024/02/12 12:45:43
+/home/sebastien/symfony/tessst/framework_php/core/View/View.php
+line : 12
+require_once(../templates/ome/index.html.php): Failed to open stream: No such file or directory
+
+EXCEPTION
+2024/02/12 12:40:53
+/home/sebastien/symfony/tessst/framework_php/src/Controller/HomeController.php
+line : 14
+Call to undefined method App\Controller\HomeController::rebnder()0
+
+EXCEPTION
+2024/02/12 12:39:00
+/home/sebastien/symfony/tessst/framework_php/src/Controller/HomeController.php
+line : 14
+Call to undefined method App\Controller\HomeController::rebnder()0
+
+EXCEPTION
+2024/02/12 12:38:51
+/home/sebastien/symfony/tessst/framework_php/src/Controller/HomeController.php
+line : 14
+Call to undefined method App\Controller\HomeController::rebnder()0
+
+ERROR
+2024/02/12 12:35:41
+/home/sebastien/symfony/tessst/framework_php/core/View/View.php
+line : 12
+require_once(../templates/home/indDex.html.php): Failed to open stream: No such file or directory
+
+ERROR
+2024/02/12 12:35:28
+/home/sebastien/symfony/tessst/framework_php/core/View/View.php
+line : 12
+require_once(../templates/home/indDex.html.php): Failed to open stream: No such file or directory
+
+ERROR
+2024/02/12 12:35:27
+/home/sebastien/symfony/tessst/framework_php/core/View/View.php
+line : 12
+require_once(../templates/home/indDex.html.php): Failed to open stream: No such file or directory
+

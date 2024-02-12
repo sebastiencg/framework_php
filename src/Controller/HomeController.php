@@ -11,7 +11,7 @@ class HomeController extends Controller
     #[Route(uri: "/", name: "app_home_index", methods: ["GET"])]
     public function index():Response
     {
-        return $this->render("home/index", [
+        return $this->render("ome/index", [
             "pageTitle"=> "Welcome to /home"
         ]);
     }
@@ -20,7 +20,7 @@ class HomeController extends Controller
     public function show(int $id):Response
     {
         //echo($id);
-        return $this->render("home/ifrendex", [
+        return $this->render("home/index", [
             "pageTitle"=> "Welcome to /home/show"
         ]);
     }
