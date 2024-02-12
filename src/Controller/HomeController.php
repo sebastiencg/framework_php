@@ -11,6 +11,7 @@ class HomeController extends Controller
     #[Route(uri: "/", name: "app_home_index", methods: ["GET"])]
     public function index():Response
     {
+
         return $this->render("ome/index", [
             "pageTitle"=> "Welcome to /home"
         ]);
