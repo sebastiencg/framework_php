@@ -20,7 +20,7 @@ class HomeController extends Controller
     public function show(int $id):Response
     {
         //echo($id);
-        return $this->render("home/index", [
+        return $this->render("home/ifrendex", [
             "pageTitle"=> "Welcome to /home/show"
         ]);
     }

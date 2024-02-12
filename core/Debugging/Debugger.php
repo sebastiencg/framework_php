@@ -58,15 +58,15 @@ class Debugger
         $this->error = [$severity, $message, $file, $line];
 
         $this->renderDebugger("error", $this->error);
-
     }
 
     public function exceptionHandler(\Throwable $exception)
     {
         $this->exception = $exception;
 
-        $this->renderDebugger("exception", $this->exception)
-        ;
+        $this->renderDebugger("exception", $this->exception);
+
+        $date = new \DateTimeImmutable();
     }
 
     public function renderDebugger($template, $data)
@@ -108,18 +108,25 @@ class Debugger
 
         $this->error = [$c,$m,$f,$l];
 
-        //ajouter au log prod
-        error_log($m, 3, "../logs/prod/prod.log");
+        // mettre la date + aérer les lignes + def les coordonnées précise de l'erreur avec fichier/ligne
+        $date = new \DateTime();
+        $error = strlen($date);
+        error_log($error, 3, "../logs/prod/prod.log");
 
         $resp = new Response();
         $resp->renderError("500", []);
     }
     public function prodExceptionHandler(\Throwable $e)
     {
-        $this->exception =$e;
+        $this->exception = $e;
 
-        //ajouter au log prod
-        error_log($e, 3, "../logs/prod/prod.log");
+        // mettre la date + aérer les lignes + def les coordonnées précise de l'erreur avec fichier/ligne
+
+        $date = new \DateTime();
+
+        $error = date_format($date,"Y/m/d H:i:s");
+
+        error_log($error, 3, "../logs/prod/prod.log");
 
         $resp = new Response();
         $resp->renderError("500", []);

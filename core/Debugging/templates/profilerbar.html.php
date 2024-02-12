@@ -27,7 +27,7 @@ align-items: center;
     </span>
 
     <span>
-        <a style="list-style: none; text-decoration: none; color: white" href="http://localhost:4372"><strong>--> Profiler</strong></a>
+        <a style="list-style: none; text-decoration: none; color: white" href="http://localhost:4372" target="_blank" rel="nofollow"><strong>--> Profiler</strong></a>
     </span>
 
 </div>
