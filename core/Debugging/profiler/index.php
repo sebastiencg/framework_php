@@ -47,6 +47,7 @@
         if (str_contains($escapedLigne, "ERROR") || str_contains($escapedLigne, "EXCEPTION")) {
             // ajouter un saut de ligne avant le texte "ERROR" ou "EXCEPTION"
             echo "<hr>";
+            *
             echo "<br>";
             // j'affiche le contenu de la ligne avec la classe 'error' pour la couleur rouge
             echo '<div class="line error">' . $escapedLigne . "</div>";
