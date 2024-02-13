@@ -15,7 +15,7 @@
             color: white;
             padding-left: 1em;
             background-color: #640505;
-            height: 10vh;
+            height: 15vh;
         }
     </style>
 </head>

@@ -32,27 +32,32 @@
 <body>
 <div class="container">
     <?php
-    // ouverture du fichier
+
+    use Core\Environment\DotEnv;
+
+    $dotEnv = new DotEnv();
+    $environment = $dotEnv->getVariable("ENVIRONMENT");
+    /*
+    if ($environment==="dev"){
+
+        $fh = fopen('../../../logs/dev/dev.log', 'r');
+
+    }else{
+        $fh = fopen('../../../logs/prod/prod.log', 'r');
+    }*/
     $fh = fopen('../../../logs/dev/dev.log', 'r');
 
-    // tant que je ne suis pas à la fin du fichier
     while (!feof($fh)) {
-        // je récupère la ligne courante
         $ligne = fgets($fh);
 
-        // échapper une seule fois et stocker dans une variable
         $escapedLigne = htmlspecialchars($ligne);
 
-        // vérifier si la ligne contient "ERROR" ou "EXCEPTION"
         if (str_contains($escapedLigne, "ERROR") || str_contains($escapedLigne, "EXCEPTION")) {
-            // ajouter un saut de ligne avant le texte "ERROR" ou "EXCEPTION"
             echo "<hr>";
 
             echo "<br>";
-            // j'affiche le contenu de la ligne avec la classe 'error' pour la couleur rouge
             echo '<div class="line error">' . $escapedLigne . "</div>";
         } else {
-            // j'affiche le contenu de la ligne normalement
             echo '<div class="line">' . $escapedLigne . "</div>";
         }
     }
