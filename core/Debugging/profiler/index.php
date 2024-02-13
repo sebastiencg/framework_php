@@ -37,6 +37,8 @@
 
     $dotEnv = new DotEnv();
     $environment = $dotEnv->getVariable("ENVIRONMENT");
+
+
     /*
     if ($environment==="dev"){
 
@@ -45,6 +47,8 @@
     }else{
         $fh = fopen('../../../logs/prod/prod.log', 'r');
     }*/
+
+
     $fh = fopen('../../../logs/dev/dev.log', 'r');
 
     while (!feof($fh)) {
