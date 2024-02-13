@@ -31,7 +31,6 @@
 </head>
 <body>
 <div class="container">
-
     <?php
 
     use Core\Environment\DotEnv;
@@ -48,7 +47,6 @@
     }else{
         $fh = fopen('../../../logs/prod/prod.log', 'r');
     }*/
-
 
     $fh = fopen('../../../logs/dev/dev.log', 'r');
 
