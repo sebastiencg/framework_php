@@ -10,95 +10,30 @@ class Debugger
 
     private $error;
     private $exception;
+    public static bool $profileBarStatus = true;
 
-
+    /**
+     * @return void
+     */
     public function run()
     {
         $dotEnv = new DotEnv();
         $environment = $dotEnv->getVariable("ENVIRONMENT");
 
+        ini_set('display_errors', 1);
+        ini_set('display_startup_errors', 1);
+        error_reporting(E_ALL);
+
+        set_error_handler([$this, "ErrorHandler"]);
+        set_exception_handler([$this, "ExceptionHandler"]);
+
         if($environment === "dev"){
-            $this->runDev();
-        }elseif ($environment === "prod"){
-            $this->runProd();
+            $this->getProfilerBar();
         }
     }
 
-    public function runDev()
-    {
-        ini_set('display_errors', 1);
-        ini_set('display_startup_errors', 1);
-        error_reporting(E_ALL);
-
-        set_error_handler([$this, "errorHandler"]);
-        set_exception_handler([$this, "exceptionHandler"]);
-
-        $this->getProfilerBar();
-    }
-    private function runProd()
-    {
-        ini_set('display_errors', 1);
-        ini_set('display_startup_errors', 1);
-        error_reporting(E_ALL);
-
-        set_error_handler([$this, "prodErrorHandler"]);
-        set_exception_handler([$this, "prodExceptionHandler"]);
-    }
-
-
-
     ////////////////////////////////////////////////////////////////
     // ########################################################## //
-
-
-    /**
-     * @param $severity
-     * @param $message
-     * @param $file
-     * @param $line
-     * @return void
-     */
-    public function  errorHandler($severity, $message, $file, $line)
-    {
-        $this->error = [$severity, $message, $file, $line];
-
-        $date = new \DateTime();
-        $newDate = date_format($date, "Y/m/d H:i:s");
-        $error = "ERROR" . "\n" . $newDate . "\n" . $file . "\n" . "line : " . $line . "\n" . $message . "\n" . "\n";
-
-        $currentContent = file_get_contents("../logs/dev/dev.log");
-
-        $newContent = $error . $currentContent;
-
-        file_put_contents("../logs/dev/dev.log", $newContent);
-
-
-        $this->renderDebugger("error", $this->error);
-    }
-
-    /**
-     * @param \Throwable $exception
-     * @return void
-     */
-    public function exceptionHandler(\Throwable $exception)
-    {
-        $this->exception = $exception;
-
-
-        // write dev.log
-        $date = new \DateTime();
-        $newDate = date_format($date, "Y/m/d H:i:s");
-        $error = "EXCEPTION" . "\n" . $newDate . "\n" . $this->exception->getFile() . "\n" . "line : " . $this->exception->getLine() . "\n" . $this->exception->getMessage() . $this->exception->getCode() . "\n" . "\n";
-
-        $currentContent = file_get_contents("../logs/dev/dev.log");
-
-        $newContent = $error . $currentContent;
-
-        file_put_contents("../logs/dev/dev.log", $newContent);
-
-
-        $this->renderDebugger("exception", $this->exception);
-    }
 
     /**
      * @param $template
@@ -132,77 +67,87 @@ class Debugger
      * @return void
      */
     public function getProfilerBar(){
-        ob_start();
-        require_once "templates/profilerbar.html.php";
-        echo ob_get_clean();
+        if (Debugger::$profileBarStatus) {
+            ob_start();
+            require_once "templates/profilerbar.html.php";
+            echo ob_get_clean();
+        }
     }
 
-    // Error 500 mode prod -> templates/error/500.html.php //
-    // ################################################### //
+    ////////////////////////////////////////////////////////////////
+    // ########################################################## //
 
-
+    // Display/Write ERRORS (Dev/Prod)
     /**
-     * @param $c
-     * @param $m
-     * @param $f
-     * @param $l
+     * @param $severity
+     * @param $message
+     * @param $file
+     * @param $line
      * @return void
      */
-    public function prodErrorHandler($c,$m,$f,$l)
+    public function ErrorHandler($severity,$message,$file,$line)
     {
-        $this->error = [$c,$m,$f,$l];
+        $dotEnv = new DotEnv();
+        $environment = $dotEnv->getVariable("ENVIRONMENT");
+
+        $this->error = [$severity,$message,$file,$line];
 
         $date = new \DateTime();
         $newDate= date_format($date,"Y/m/d H:i:s");
-        $error="ERROR"."\n".$newDate."\n".$f."\n"."line : ".$l."\n".$m."\n"."\n";
+        $error="ERROR"."\n".$newDate."\n".$file."\n"."line : ".$line."\n".$message."\n"."\n";
 
-        $currentContent = file_get_contents("../logs/prod/prod.log");
+        if($environment === "dev"){
+            $currentContent = file_get_contents("../logs/dev/dev.log");
+            $newContent = $error . $currentContent;
 
-        $newContent = $error . $currentContent;
-        file_put_contents("../logs/prod/prod.log", $newContent);
-        $resp = new Response();
-        $resp->renderError("500", []);
+            file_put_contents("../logs/dev/dev.log", $newContent);
+            $this->renderDebugger("error", $this->error);
+        }
+        elseif ($environment === "prod") {
+            $currentContent = file_get_contents("../logs/prod/prod.log");
+            $newContent = $error . $currentContent;
+
+            file_put_contents("../logs/prod/prod.log", $newContent);
+            $resp = new Response();
+            $resp->renderError("500", []);
+        }
+
     }
+
+    // Display/Write EXCEPTION (Dev/Prod)
 
     /**
-     * @param \Throwable $e
+     * @param $exception
      * @return void
      */
-    public function prodExceptionHandler(\Throwable $e)
+    public function ExceptionHandler($exception)
     {
-        $this->exception = $e;
+        $dotEnv = new DotEnv();
+        $environment = $dotEnv->getVariable("ENVIRONMENT");
 
-        $date = new \DateTime();
-        $newDate = date_format($date, "Y/m/d H:i:s");
-        $error = "EXCEPTION" . "\n" . $newDate . "\n" . $this->exception->getFile() . "\n" . "line : " . $this->exception->getLine() . "\n" . $this->exception->getMessage() . $this->exception->getCode() . "\n" . "\n";
+        $this->exception = $exception;
 
-        $currentContent = file_get_contents("../logs/prod/prod.log");
-
-        $newContent = $error . $currentContent;
-
-        file_put_contents("../logs/prod/prod.log", $newContent);
-
-        $resp = new Response();
-        $resp->renderError("500", []);
-    }
-
-
-
-
-    public function writeError($template)
-    {
-        // write Error
-        $date = new \DateTime();
-        $newDate= date_format($date,"Y/m/d H:i:s");
-        $error="ERROR"."\n".$newDate."\n".$this->exception->getFile()."\n"."line : ".$this->exception->getLine()."\n".$this->exception->getMessage().$this->exception->getCode()."\n"."\n";
-        error_log($error, 3, "../logs/$template.log");
-    }
-    public function writeException($template)
-    {
-        // write Exception
         $date = new \DateTime();
         $newDate= date_format($date,"Y/m/d H:i:s");
         $error="EXCEPTION"."\n".$newDate."\n".$this->exception->getFile()."\n"."line : ".$this->exception->getLine()."\n".$this->exception->getMessage().$this->exception->getCode()."\n"."\n";
-        error_log($error, 3, "../logs/$template.log");
+
+
+
+
+        if($environment === "dev"){
+            $currentContent = file_get_contents("../logs/dev/dev.log");
+            $newContent = $error . $currentContent;
+            file_put_contents("../logs/dev/dev.log", $newContent);
+
+            $this->renderDebugger("exception", $this->exception);
+        }
+        elseif ($environment === "prod") {
+            $currentContent = file_get_contents("../logs/prod/prod.log");
+            $newContent = $error . $currentContent;
+            file_put_contents("../logs/prod/prod.log", $newContent);
+
+            $resp = new Response();
+            $resp->renderError("500", []);
+        }
     }
 }

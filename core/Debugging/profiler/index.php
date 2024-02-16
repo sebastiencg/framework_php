@@ -32,14 +32,16 @@
 <body>
 <div class="container">
     <?php
-
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+/*
     use Core\Environment\DotEnv;
 
     $dotEnv = new DotEnv();
     $environment = $dotEnv->getVariable("ENVIRONMENT");
 
 
-    /*
+
     if ($environment==="dev"){
 
         $fh = fopen('../../../logs/dev/dev.log', 'r');
@@ -49,7 +51,6 @@
     }*/
 
     $fh = fopen('../../../logs/dev/dev.log', 'r');
-
     while (!feof($fh)) {
         $ligne = fgets($fh);
 
@@ -65,7 +66,6 @@
         }
     }
 
-    // je ferme mon fichier
     fclose($fh);
     ?>
 </div>
