@@ -18,6 +18,8 @@ class HomeController extends Controller
             "pageTitle"=> "Welcome to /home",
             "data"=>$response
         ]);
+
+
     }
 
     #[Route(uri: "/home/show/{id}", name: "app_home_show", methods: ["GET", "POST"])]
